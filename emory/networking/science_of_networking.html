@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>On the science of conference networking</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="science_of_networking_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="science_of_networking_files/reveal.js-3.3.0.1/css/theme/simple.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">On the science of conference networking</h1>
+    <h2 class="author"><div style="color:#DF8383;">
+<center>
+<strong>Matt Malishev</strong>
+</center>
+</div></h2>
+    <h3 class="date"><div style="white-space: pre-line;"><span class="citation" data-cites="darwinanddavis">@darwinanddavis</span>
+SNAB meeting, Feb 13, 2020</div></h3>
+</section>
+
+<section class="slide level2">
+
+<style type="text/css">
+
+.reveal section img { 
+  background:none; 
+  border:none; 
+  box-shadow:none; 
+}
+
+.reveal .small{
+  font-size: 60%;
+}
+
+</style>
+<p class="small">
+These are tips and lessons after a few years of conferencing.<br />
+I’ve put down everything I think is useful, so don’t worry if it feels like a lot.<br />
+Networking skills take time to grow, so treat this content as both the seed and fertiliser.
+</p>
+<!-- ____________________________________________________________________________ -->
+<!-- start body -->
+</section>
+<section><section id="on-networking" class="titleslide slide level1" data-background="#DF8383"><h1>On networking</h1></section><section id="prior-to-your-conference" class="slide level2" data-background="#DF8383">
+<h2>Prior to your conference</h2>
+</section><section id="section" class="slide level2">
+<h2></h2>
+<p>Check the schedule and do some research on people you want to meet, then email them</p>
+<ul>
+<li class="fragment"><blockquote>
+<p>Hi Dr Hooever, I saw you’re going to EEID2020 and I wanted to reach out to organise a time to meet up and chat at the conference. I’m a PhD student working on XX. I read your paper on YY and thought it was dope and wanted to pick your brain. Could we organise a time to meet up?</p>
+</blockquote></li>
+</ul>
+</section><section id="section-1" class="slide level2">
+<h2></h2>
+<p>Have an elevator pitch and have it nailed</p>
+<ul>
+<li class="fragment"><blockquote>
+<p>I’m Matt Malishev, I’m a postdoc at Emory University working on simulation modelling and bioenergetics in infectious disease ecology.</p>
+</blockquote></li>
+</ul>
+</section><section id="at-the-conference" class="slide level2" data-background="#DF8383">
+<h2>At the conference</h2>
+</section><section id="section-2" class="slide level2">
+<h2></h2>
+<p>People love when you talk to them about their work. However, they don’t know you and won’t approach you, so make yourself known instead.</p>
+<p><strong>Put yourself on people’s radars to maximise opportunity</strong></p>
+</section><section id="section-3" class="slide level2" data-background="#E5CCCC">
+<h2></h2>
+<h3 id="say-yes-to-everything"><strong>Say yes to everything</strong></h3>
+<p>Jump at invites to have a one-on-one for coffee, get lunch, meet at a bar later, etc.</p>
+<p>If you already have an agenda, missing a talk to speak with someone one-on-one is almost always more valuable.</p>
+</section><section id="some-email-correspondence" class="slide level2" data-background="#E5CCCC">
+<h2>Some email correspondence</h2>
+<blockquote>
+<p>“Please consider applying for this position we have open. The person in this role would work closely with me and my team.”</p>
+</blockquote>
+<blockquote>
+<p>“Apply to the link and just give me a heads up when it’s done. I will let the hiring manager know so we can bump you up the queue.”</p>
+</blockquote>
+</section><section id="section-4" class="slide level2">
+<h2></h2>
+<p>Strike up a conversation with <em>everyone</em>. You never know who you’ll be talking to, how you relate, where they’ll invite you, or what opportunities they have.</p>
+</section><section id="some-email-correspondence-1" class="slide level2" data-background="#E5CCCC">
+<h2>Some email correspondence</h2>
+<blockquote>
+<p>“I got your note on LinkedIn. I wanted to make sure you have my email address too, since a lot of my life lives on email. I definitely have you on my radar as we build out our Real Estate/location intelligence business.”</p>
+</blockquote>
+</section><section id="section-5" class="slide level2">
+<h2></h2>
+<p>Approach speakers after their talks. It creates a platform for dialogue. Trust me, they want to hear from you.</p>
+<p>People will rarely be by themselves, so jump on the opportunity when you see they’re free.</p>
+<p>After your own talk …</p>
+<ul>
+<li class="fragment">Sign off by saying you’ll stick around, then stay in the room afterwards</li>
+</ul>
+</section><section id="section-6" class="slide level2">
+<h2></h2>
+<p>Don’t waste time with people you know already. Make new opportunities. If you find conversation stale, move on. There are plenty of new people around.</p>
+</section><section id="section-7" class="slide level2">
+<h2></h2>
+<center>
+<em>If you have any trepidation</em>
+</center>
+<p><strong>The Academic-Socialite Paradox</strong></p>
+<p>A lot of academics are introverted and don’t expect people to approach them, but everyone at conferences is usually deep in conversation.</p>
+</section></section>
+<section><section id="on-helping-yourself-get-hired" class="titleslide slide level1" data-background="#DF8383"><h1>On helping yourself get hired</h1></section><section id="section-8" class="slide level2">
+<h2></h2>
+<p>A few public things is infinitely better than lots of local things</p>
+<p><br></p>
+<p><img src="voo.png", width=700, height=400, align="center"></p>
+</section><section id="section-9" class="slide level2">
+<h2></h2>
+<p><strong>Have a website</strong></p>
+<ul>
+<li class="fragment">It’s a convenient and dynamic resume</li>
+<li class="fragment">It’s a talking point<br />
+</li>
+<li class="fragment">It’s sticky<br />
+</li>
+<li class="fragment">It shows stuff when you don’t have stuff to show</li>
+</ul>
+</section><section id="section-10" class="slide level2">
+<h2></h2>
+<p><strong>Have your LinkedIn filled out</strong><br />
+<strong>Have blog posts or history of your work</strong></p>
+<ul>
+<li class="fragment">If you don’t have ideas, make a research notebook of your progress<br />
+</li>
+<li class="fragment">Helps you practise useful skills like writing, coding, web building<br />
+</li>
+<li class="fragment">Start now, now, now<br />
+</li>
+<li class="fragment"><blockquote>
+<p>A year from now you’ll wish you had started today</p>
+</blockquote></li>
+</ul>
+</section><section id="section-11" class="slide level2">
+<h2></h2>
+<p>You may not be talking to the go-to person at the conference, but they’re the conduit to those people.</p>
+<ul>
+<li class="fragment">The hiring manager reviews applications, but your contact can infuence them/put you on the right path</li>
+</ul>
+</section><section id="some-email-correspondence-2" class="slide level2" data-background="#E5CCCC">
+<h2>Some email correspondence</h2>
+<blockquote>
+<p>“Once your application is in, send me an email and I will let our hiring team know to look out for your application.”</p>
+</blockquote>
+</section><section id="an-example-from-the-job-market-on-computational-research" class="slide level2">
+<h2>An example from the job market on computational research</h2>
+<blockquote>
+<p>“Exceptional candidates will have one or more of the following: a working knowledge of Bayesian Hierarchical Modeling; practical experience in near-term forecasting or data assimilation techniques; and/or a track record of publishing peer-reviewed software and data products in addition to manuscripts.”</p>
+</blockquote>
+</section><section id="section-12" class="slide level2">
+<h2></h2>
+<p><strong>If you’re in computational research</strong></p>
+<ul>
+<li class="fragment">Some 90% of employers will request your Github handle<br />
+</li>
+<li class="fragment">It’s a great way to show your research activity<br />
+</li>
+<li class="fragment">Packages, web apps, software, and research tools are often hosted on Github so knowing it will make navigating new developments easier</li>
+</ul>
+</section><section id="section-13" class="slide level2">
+<h2></h2>
+<p><strong>If you’re not in computational research</strong></p>
+<p>(The next points also apply to above)</p>
+<ul>
+<li class="fragment">It’s 2020, e.g. <a href="https://dash-gallery.plotly.host/Portal/?search=">plotly</a>, <a href="https://shiny.rstudio.com/gallery/#user-showcase">Shiny</a>, <a href="https://rpubs.com/">RPubs</a><br />
+</li>
+<li class="fragment">Academic journals are behind in data viz, so not good metrics for next-gen tools<br />
+</li>
+<li class="fragment">Pithy way to showcase your skills with data<br />
+</li>
+<li class="fragment">opensci (open science communication)<br />
+</li>
+<li class="fragment">It’ll help you diversify your skills should you change research paths/your mind later</li>
+</ul>
+</section></section>
+<section><section id="on-extra-curricular" class="titleslide slide level1" data-background="#DF8383"><h1>On extra curricular</h1></section><section id="section-14" class="slide level2" data-background-iframe="https://darwinanddavis.github.io/EmoRyCodingClub/index.html">
+<h2></h2>
+</section><section id="section-15" class="slide level2">
+<h2></h2>
+<p>Your research and manuscripts show only some of your capabilities</p>
+<ul>
+<li class="fragment">Manuscripts aren’t useful morsels for showing skills and experience</li>
+<li class="fragment">Hard skills are often buried in SI or never make the manuscript</li>
+<li class="fragment">Don’t rely on the slow publication pace of journals to show your work<br />
+</li>
+<li class="fragment"><strong>Identify what skills you want to emphasise, then find creative and alternative ways to showcase these. There are tonnes of options to show your work.</strong></li>
+</ul>
+</section></section>
+<section><section id="on-your-value" class="titleslide slide level1" data-background="#DF8383"><h1>On your value</h1></section><section id="section-16" class="slide level2">
+<h2></h2>
+<ul>
+<li class="fragment">You’re already better than you think<br />
+</li>
+<li class="fragment">You have insightful contributions even if you’re early in your career<br />
+</li>
+<li class="fragment">It’s difficult to see your progress, but you’ve progressed way more than you realise. Show people this.</li>
+</ul>
+</section></section>
+<section><section id="summary" class="titleslide slide level1" data-background="#DF8383"><h1>Summary</h1></section><section id="on-conferencing" class="slide level2">
+<h2>On conferencing</h2>
+<ul>
+<li class="fragment">It’s work. Have an agenda.<br />
+</li>
+<li class="fragment">A little extra prep goes a long way.<br />
+</li>
+<li class="fragment">The best ideas/discussion are over beer/after hours.<br />
+</li>
+<li class="fragment">Aim to get yourself invited to things.<br />
+</li>
+<li class="fragment">Maximise any and every opportunity.<br />
+</li>
+<li class="fragment">Have an online brand and wear it.</li>
+</ul>
+<!-- end body -->
+<!-- ____________________________________________________________________________ -->
+</section></section>
+    </div>
+  </div>
+
+  <script src="science_of_networking_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="science_of_networking_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: true,
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'science_of_networking_files/reveal.js-3.3.0.1/plugin/notes/notes.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "science_of_networking_files/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
