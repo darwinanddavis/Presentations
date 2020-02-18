@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582043467197.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1572325054",
+    "id" : "C54BCA36",
+    "lastKnownWriteTime" : 1582043482,
+    "last_content_update" : 1582043482642,
+    "path" : "~/Documents/Presentations/Presentations/Emory/networking/science_of_networking.Rmd",
+    "project_path" : "science_of_networking.Rmd",
+    "properties" : {
+        "cursorPosition" : "58,15",
+        "scrollLine" : "56"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
